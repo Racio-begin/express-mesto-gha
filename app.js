@@ -1,9 +1,12 @@
-const http = require('http');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const express = require('express');
+const usersRouter = require('./routes/users');
 
-// eslint-disable-next-line no-unused-vars
-const server = http.createServer((req, res) => {
-  res.writeHead(200, {
-    'Content-Type': 'text/html; charset=utf8',
-  });
-  res.end('<h1>Привет, мир!</h1>', 'utf8');
+const app = express();
+
+app.use('/users', usersRouter);
+
+app.listen(3000, () => {
+  // eslint-disable-next-line no-console
+  console.log('Сервер запущен! :) ыыы');
 });
