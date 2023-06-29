@@ -1,8 +1,13 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const usersRouter = require('express').Router();
 
-const { createUser } = require('../controllers/users');
+const {
+  createUser,
+  getUser,
+  getAllUsers,
+} = require('../controllers/users');
 
 usersRouter.post('/', createUser);
+usersRouter.get('/', getAllUsers);
+usersRouter.get('/:userId', getUser);
 
 module.exports = usersRouter;

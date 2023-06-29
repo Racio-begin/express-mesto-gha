@@ -1,17 +1,22 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const express = require('express');
-// eslint-disable-next-line import/no-extraneous-dependencies
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+
+const usersRouter = require('./routes/users');
+const cardsRouter = require('./routes/cards');
+
+const { PORT = 3000 } = process.env;
 
 const app = express();
 
-const usersRouter = require('./routes/users');
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 // применить для всех роутов bodyParser (чтение тела запроса)
 app.use(bodyParser.json());
-app.use('/users', usersRouter);
 
-app.listen(3000, () => {
-  // eslint-disable-next-line no-console
-  console.log('Сервер запущен! :) ыыы');
+app.use('/users', usersRouter);
+app.use('/cards', cardsRouter);
+
+app.listen(PORT, () => {
+  console.log(`Сервер запущен на порту ${PORT}! :)`);
 });
