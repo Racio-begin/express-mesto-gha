@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 const Card = require('../models/card');
 
-const { BAD_REQUEST_ERROR } = require('../utils/serverResponseStatus');
+const { BAD_REQUEST_ERROR, NOT_FOUND_ERROR } = require('../utils/serverResponseStatus');
 
 // eslint-disable-next-line no-unused-vars
 const createCard = (req, res) => {
@@ -17,13 +17,29 @@ const createCard = (req, res) => {
     });
 };
 
-// const getAllCards = (req, res) => {
+const getAllCards = (req, res) => {
+  Card.find({})
+    .then((cards) => {
+      res.send(cards);
+    })
+    .catch((err) => {
+      res.status(BAD_REQUEST_ERROR).send(err);
+    });
+};
 
-// };
-
-// const deleteCard = (req, res) => {
-
-// };
+const deleteCard = (req, res) => {
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным id не найдена' });
+      } else {
+        res.send(card);
+      }
+    })
+    .catch((err) => {
+      res.status(BAD_REQUEST_ERROR).send(err);
+    });
+};
 
 // const likeCard = (req, res) => Card.findByIdAndUpdate(
 //   req.params.cardId,
@@ -39,8 +55,8 @@ const createCard = (req, res) => {
 
 module.exports = {
   createCard,
-  // getAllCards,
-  // deleteCard,
+  getAllCards,
+  deleteCard,
   // likeCard,
   // dislikeCard,
 };
