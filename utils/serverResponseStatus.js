@@ -4,7 +4,7 @@
 const OK_STATUS = 200;
 
 // Ресуср был успешно создан на сервере
-const CREATED_STATUS = 200;
+const CREATED_STATUS = 201;
 
 /* *** Статусы ошибок *** */
 
