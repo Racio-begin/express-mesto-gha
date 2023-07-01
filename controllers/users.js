@@ -4,6 +4,7 @@ const User = require('../models/user');
 // Импортировать ошибку
 const {
   OK_STATUS,
+  CREATED_STATUS,
   BAD_REQUEST_ERROR,
   NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
@@ -18,7 +19,7 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     // в случае успеха (resolve) приходит новая запись с новым пользователем, отправляем её на фронт
     .then((user) => {
-      res.send(user);
+      res.status(CREATED_STATUS).send(user);
     })
     // в случае провала (req) приходит ошибка и отпраляется на фронт для обозначения проблемы
     .catch((err) => {
