@@ -43,6 +43,7 @@ const getAllUsers = (req, res) => {
     });
 };
 
+// todo: реализовать orFail() для реализации всех ошибок в .catch
 const getUser = (req, res) => {
   // Вызвать метод findById, возвращает пользователя по id, если он есть
   User.findById(req.params.userId)
