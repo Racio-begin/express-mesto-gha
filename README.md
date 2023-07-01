@@ -3,6 +3,9 @@
 
 В данном проекте сделаны первые шаги по реализации backend-составляющей проекта Mesto Russia.
 
+Страница расположена по адресу: [Express Mesto GHA](https://github.com/Racio-begin/express-mesto-gha/)
+
+
 ## В работе были применены следующие технологии:
 
 * Серверная разработка на Node.js;
@@ -11,12 +14,11 @@
 * Работа с базой данных Mongo DB и ODM-библиотекой Mongoose.
 
 
-Страница расположена по адресу: [Express Mesto GHA](https://github.com/Racio-begin/express-mesto-gha/)
-
 ## Запуск проекта
 
 `npm run start` — запускает сервер   
 `npm run dev` — запускает сервер с hot-reload
+
 
 ## Планы по дальнейшей доработке проекта:
 
