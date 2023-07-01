@@ -5,7 +5,7 @@ const User = require('../models/user');
 const {
   OK_STATUS,
   BAD_REQUEST_ERROR,
-  // NOT_FOUND_ERROR,
+  NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
 } = require('../utils/serverResponseStatus');
 
@@ -45,17 +45,16 @@ const getAllUsers = (req, res) => {
 const getUser = (req, res) => {
   // Вызвать метод findById, возвращает пользователя по id, если он есть
   User.findById(req.params.userId)
-    // .then((user) => {
-    //   if (!user) {
-    //     res.status(NOT_FOUND_ERROR).send({ message:
-    // 'Пользователь по указанному _id не найден' });
-    //   } else {
-    //     res.status(OK_STATUS).send(user);
-    //   }
-    // })
     .then((user) => {
-      res.status(OK_STATUS).send(user);
+      if (!user) {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден' });
+      } else {
+        res.status(OK_STATUS).send(user);
+      }
     })
+    // .then((user) => {
+    //   res.status(OK_STATUS).send(user);
+    // })
     .catch((err) => {
       if (err.name === 'ObjectId') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при запросе пользователя.' });
