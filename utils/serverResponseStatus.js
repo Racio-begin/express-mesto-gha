@@ -20,7 +20,7 @@ const INTERNAL_SERVER_ERROR = 500;
 // todo: реализовать defaultError
 // const defaultError = (res, message) => {
 /*   res.status(INTERNAL_SERVER_ERROR).send({
-  message: `На сервере произошла ошибка по умолчанию. ${message}`
+  message: `На сервере произошла Ошибка по умолчанию.. ${message}`
 });
 };
 */

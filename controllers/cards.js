@@ -18,8 +18,8 @@ const createCard = (req, res) => {
     .then((card) => {
       res.status(CREATED_STATUS).send(card);
     })
-    .catch((err) => {
-      res.status(BAD_REQUEST_ERROR).send(err);
+    .catch(() => {
+      res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при создании карточки.' });
     });
 };
 
@@ -29,7 +29,7 @@ const getAllCards = (req, res) => {
       res.send(cards);
     })
     .catch(() => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию' });
+      res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
     });
 };
 
@@ -72,7 +72,7 @@ const likeCard = (req, res) => {
       if (err.name === 'CastError') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные для постановки лайка.' });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию' });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
       }
     });
 };
@@ -97,7 +97,7 @@ const dislikeCard = (req, res) => {
       if (err.name === 'CastError') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные для удаления лайка.' });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию' });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
       }
     });
 };
