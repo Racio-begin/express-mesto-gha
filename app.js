@@ -12,12 +12,6 @@ const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
-// применить для всех роутов bodyParser (чтение тела запроса)
-app.use(bodyParser.json());
-
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
-
 app.use((req, res, next) => {
   req.user = {
     _id: '649db82fee1145c0c41b7f26', // временная мера, вставим сюда _id пользователя из бд (Пётр)
@@ -25,6 +19,12 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// применить для всех роутов bodyParser (чтение тела запроса)
+app.use(bodyParser.json());
+
+app.use('/users', usersRouter);
+app.use('/cards', cardsRouter);
 
 app.use('*', (req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Ресурс не найден' });
