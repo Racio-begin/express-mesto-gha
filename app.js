@@ -7,14 +7,14 @@ const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { NOT_FOUND_ERROR } = require('./utils/serverResponseStatus');
-const { PORT, DB_URL } = require('./utils/env');
+const { PORT } = require('./utils/env');
 
 const app = express();
 
 // защитить приложение от веб-уязвимостей
 // app.use(helmet());
 
-mongoose.connect(DB_URL);
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.use((req, res, next) => {
   req.user = {
