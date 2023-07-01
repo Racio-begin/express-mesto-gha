@@ -52,11 +52,8 @@ const getUser = (req, res) => {
         res.status(OK_STATUS).send(user);
       }
     })
-    // .then((user) => {
-    //   res.status(OK_STATUS).send(user);
-    // })
     .catch((err) => {
-      if (err.name === 'ObjectId') {
+      if (err.name === 'CastError') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при запросе пользователя.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
