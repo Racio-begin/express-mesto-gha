@@ -1,7 +1,7 @@
 [![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
 # Проект Mesto фронтенд + бэкенд
 
-Страница расположена по адресу: [Mesto Russia](https://github.com/Racio-begin/express-mesto-gha/)
+Страница расположена по адресу: [Express Mesto GHA](https://github.com/Racio-begin/express-mesto-gha/)
 
 ## Директории
 
