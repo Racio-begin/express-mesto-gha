@@ -3,14 +3,13 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const usersRouter = require('./routes/users');
-const { NOT_FOUND_ERROR } = require('./utils/serverResponseStatus');
 const cardsRouter = require('./routes/cards');
-
-const { PORT = 3000 } = process.env;
+const { NOT_FOUND_ERROR } = require('./utils/serverResponseStatus');
+const { PORT, DB_URL } = require('./utils/env');
 
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+mongoose.connect(DB_URL);
 
 app.use((req, res, next) => {
   req.user = {
