@@ -51,7 +51,6 @@ const deleteCard = (req, res) => {
     });
 };
 
-// eslint-disable-next-line no-unused-vars
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,

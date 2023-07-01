@@ -11,6 +11,9 @@ const { PORT, DB_URL } = require('./utils/env');
 
 const app = express();
 
+// защитить приложение от веб-уязвимостей
+app.use(helmet());
+
 mongoose.connect(DB_URL);
 
 app.use((req, res, next) => {
@@ -20,9 +23,6 @@ app.use((req, res, next) => {
 
   next();
 });
-
-// защитить приложение от веб-уязвимостей
-app.use(helmet());
 
 // применить для всех роутов bodyParser (чтение тела запроса)
 app.use(bodyParser.json());
