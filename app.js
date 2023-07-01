@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const helmet = require('helmet');
+// const helmet = require('helmet');
 
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
@@ -12,7 +12,7 @@ const { PORT, DB_URL } = require('./utils/env');
 const app = express();
 
 // защитить приложение от веб-уязвимостей
-app.use(helmet());
+// app.use(helmet());
 
 mongoose.connect(DB_URL);
 
