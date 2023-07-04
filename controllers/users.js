@@ -1,6 +1,8 @@
 // Импортировать модель пользователя
 // eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require('bcryptjs');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 // Импортировать ошибку
@@ -8,6 +10,7 @@ const {
   OK_STATUS,
   CREATED_STATUS,
   BAD_REQUEST_ERROR,
+  UNAUTHORIZED_ERROR,
   NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
 } = require('../utils/serverResponseStatus');
@@ -120,10 +123,28 @@ const updateAvatar = (req, res) => {
     });
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        'four-seven-two-thousand-twenty-three',
+        { expiresIn: '7d' },
+      );
+      res.send({ token });
+    })
+    .catch(() => {
+      res.status(UNAUTHORIZED_ERROR).send({ message: 'Ошибка авторизации' });
+    });
+};
+
 module.exports = {
   createUser,
   getAllUsers,
   getUser,
   updateUser,
   updateAvatar,
+  login,
 };

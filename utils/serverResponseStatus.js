@@ -11,6 +11,9 @@ const CREATED_STATUS = 201;
 // Невалидный запрос
 const BAD_REQUEST_ERROR = 400;
 
+// Ошибка авторизации
+const UNAUTHORIZED_ERROR = 401;
+
 // Страница/сущность не найдена
 const NOT_FOUND_ERROR = 404;
 
@@ -29,6 +32,7 @@ module.exports = {
   OK_STATUS,
   CREATED_STATUS,
   BAD_REQUEST_ERROR,
+  UNAUTHORIZED_ERROR,
   NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
   // defaultError,
