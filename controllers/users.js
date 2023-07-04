@@ -1,4 +1,6 @@
 // Импортировать модель пользователя
+// eslint-disable-next-line import/no-extraneous-dependencies
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 // Импортировать ошибку
@@ -12,11 +14,24 @@ const {
 
 const createUser = (req, res) => {
   // Получим из объекта запроса имя, описание и аватар пользователя
-  const { name, about, avatar } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
 
   // Вызвать метод create, передаем данные на вход для создания пользователя,
   // создадим документ на основе пришедших данных
-  User.create({ name, about, avatar })
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
     // в случае успеха (resolve) приходит новая запись с новым пользователем, отправляем её на фронт
     .then((user) => {
       res.status(CREATED_STATUS).send(user);
