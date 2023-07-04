@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const validator = require('validator');
+const isEmail = require('validator/lib/isEmail');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -22,6 +23,20 @@ const userSchema = new mongoose.Schema({
       validator: (v) => validator.isURL(v),
       message: 'Некорректный URL',
     },
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+    validate: {
+      validator: (v) => isEmail(v),
+      message: 'Некорректный формат почты',
+    },
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
   },
 }, { versionKey: false });
 
