@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const helmet = require('helmet');
+// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
+const cookieParser = require('cookie-parser');
 
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
@@ -13,6 +15,8 @@ const app = express();
 
 // защитить приложение от веб-уязвимостей
 app.use(helmet());
+
+app.use(cookieParser());
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 

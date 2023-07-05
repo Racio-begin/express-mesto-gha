@@ -134,11 +134,19 @@ const login = (req, res) => {
         { expiresIn: '7d' },
       );
       res.send({ token });
+      res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+      });
     })
     .catch(() => {
       res.status(UNAUTHORIZED_ERROR).send({ message: 'Ошибка авторизации' });
     });
 };
+
+// Разобрать тему: Способы хранения JWT в браузере
+
+// https://practicum.yandex.ru/trainer/web/lesson/573dc76f-d62e-46f0-9413-9948caed8ec6/?searchedText=httpOnly
 
 module.exports = {
   createUser,
