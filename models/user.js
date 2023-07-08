@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
+    // index: { unique: true },
     required: true,
     validate: {
       validator: (v) => isEmail(v),
@@ -40,6 +41,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    select: false,
     minlength: 8,
   },
 }, { versionKey: false });
@@ -47,7 +49,7 @@ const userSchema = new mongoose.Schema({
 // Кастомный метод проверки email и пароля
 // eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email })
+  return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
