@@ -17,7 +17,7 @@ const {
   UNAUTHORIZED_ERROR,
   NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
-} = require('../utils/serverResponseStatus');
+} = require('../utils/OtherResponseStatuses');
 
 const SALT_ROUNDS = 10;
 

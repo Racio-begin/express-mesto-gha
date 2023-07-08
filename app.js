@@ -8,7 +8,7 @@ const auth = require('./middlewares/auth');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
-const { NOT_FOUND_ERROR } = require('./utils/serverResponseStatus');
+// const { NOT_FOUND_ERROR } = require('./utils/serverR');
 const { PORT } = require('./utils/env');
 
 const app = express();
