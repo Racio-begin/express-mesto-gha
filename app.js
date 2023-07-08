@@ -14,6 +14,7 @@ const { createUser, login } = require('./controllers/users');
 const { PORT } = require('./utils/env');
 const NotFoundError = require('./errors/NotFoundError');
 const { INTERNAL_SERVER_ERROR } = require('./utils/ServerResponseStatuses');
+const { createUserJoiValidation, loginJoiValidation } = require('./middlewares/JoiValidator');
 
 const app = express();
 
@@ -27,13 +28,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 // применить для всех роутов bodyParser (чтение тела запроса)
 app.use(bodyParser.json());
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', loginJoiValidation, login);
+app.post('/signup', createUserJoiValidation, createUser);
 
-app.use(auth);
+// app.use(auth);
 
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
 
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Ресурс не найден. Проверьте правильность введенного URL.'));
