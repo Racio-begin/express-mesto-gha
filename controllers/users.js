@@ -9,19 +9,17 @@ const User = require('../models/user');
 
 const SECRET_KEY = require('../utils/sk');
 
-// Импортировать ошибку
-const {
-  OK_STATUS,
-  CREATED_STATUS,
-  BAD_REQUEST_ERROR,
-  UNAUTHORIZED_ERROR,
-  NOT_FOUND_ERROR,
-  INTERNAL_SERVER_ERROR,
-} = require('../utils/OtherResponseStatuses');
+// Импортировать статусы ответов сервера
+const BadRequestError = require('../errors/BadRequestError');
+const ConflictError = require('../errors/ConflictError');
+const NotFoundError = require('../errors/NotFoundError');
+// const UnauthorizedError = require('../errors/UnauthorizedError');
+
+const { OK_STATUS, CREATED_STATUS, MONGO_DUPLICATE_KEY_ERROR } = require('../utils/ServerResponseStatuses');
 
 const SALT_ROUNDS = 10;
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   // Получим из объекта запроса имя, описание и аватар пользователя
   const {
     name,
@@ -51,68 +49,73 @@ const createUser = (req, res) => {
     // в случае провала (req) приходит ошибка и отпраляется на фронт для обозначения проблемы
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при создании пользователя.' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
+        return next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
       }
+      if (err.code === MONGO_DUPLICATE_KEY_ERROR) {
+        return next(new ConflictError('Пользователь с указанным Email уже зарегистрирован.'));
+      }
+      return next(err);
     });
 };
 
-const getAllUsers = (req, res) => {
-  // Вызвать метод find, возвращает все сущности, т.к. передаем ему пустой массив
+// const getAllUsers = (req, res) => {
+//   // Вызвать метод find, возвращает все сущности, т.к. передаем ему пустой массив
+//   User.find({})
+//     // в случае успеха (resolve) приходит список всех пользователей в бд
+//     .then((users) => {
+//       res.send(users);
+//     })
+//     .catch(() => {
+//       res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
+//     });
+// };
+
+const getAllUsers = (req, res, next) => {
   User.find({})
-    // в случае успеха (resolve) приходит список всех пользователей в бд
     .then((users) => {
-      res.send(users);
+      res.send({ data: users });
     })
-    .catch(() => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
-    });
+    .catch(next);
 };
 
 // todo: реализовать orFail() для реализации всех ошибок в .catch
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   // Вызвать метод findById, возвращает пользователя по id, если он есть
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному _id не найден' });
-      } else {
-        res.status(OK_STATUS).send(user);
-      }
+        throw new NotFoundError('Пользователь по указанному _id не найден.');
+      } else res.status(OK_STATUS).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при запросе пользователя.' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
+        return next(new BadRequestError('Переданы некорректные данные при запросе пользователя.'));
       }
+      return next(err);
     });
 };
 
-const getUserInfo = (req, res) => {
+const getUserInfo = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
-    // .then((user) => {
-    // if (!user) {
-    //   res.status(NOT_FOUND_ERROR).send({ message: 'Такого пользователя не существует.' });
-    // }
-    // res.status(OK_STATUS).send({ data: user });
+  // .then((user) => {
+  // if (!user) {
+  //   res.status(NOT_FOUND_ERROR).send({ message: 'Такого пользователя не существует.' });
+  // }
+  // res.status(OK_STATUS).send({ data: user });
+
+    // eslint-disable-next-line consistent-return
     .then((user) => {
+      if (!user) {
+        return next(new NotFoundError('Такого пользователя не существует.'));
+      }
       res.send({ data: user });
     })
-    .catch((err) => {
-      // if (err.name === 'CastError') {
-      if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при запросе пользователя.' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
-      }
-    });
+    .catch(next);
 };
 
 // todo: настроить Postman для проверки
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   // Вызвать метод findByIdAndUpdate, ищет пользователя по id и обновляет указанные поля
   const { name, about } = req.body;
   const userId = req.user._id;
@@ -123,17 +126,18 @@ const updateUser = (req, res) => {
     // данные будут валидированы перед изменением
     runValidators: true,
   })
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      res.send({ data: user });
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
+        return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
       }
+      return next(err);
     });
 };
 
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   const userId = req.user._id;
 
@@ -143,17 +147,18 @@ const updateAvatar = (req, res) => {
     // данные будут валидированы перед изменением
     runValidators: true,
   })
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      res.send({ data: user });
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
+        return next(new BadRequestError('Переданы некорректные данные при обновлении аватара.'));
       }
+      return next(err);
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -169,14 +174,8 @@ const login = (req, res) => {
         httpOnly: true,
       });
     })
-    .catch(() => {
-      res.status(UNAUTHORIZED_ERROR).send({ message: 'Ошибка авторизации' });
-    });
+    .catch(next);
 };
-
-// Разобрать тему: Способы хранения JWT в браузере
-
-// https://practicum.yandex.ru/trainer/web/lesson/573dc76f-d62e-46f0-9413-9948caed8ec6/?searchedText=httpOnly
 
 module.exports = {
   createUser,
