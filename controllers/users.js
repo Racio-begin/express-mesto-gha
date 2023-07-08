@@ -1,9 +1,12 @@
 // Подключим модуль для хэширования пароля
-// eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require('bcryptjs');
+
+// Подключим модуль для создания и проверки токенов
 const jwt = require('jsonwebtoken');
+
 // Импортировать модель пользователя
 const User = require('../models/user');
+
 const SECRET_KEY = require('../utils/sk');
 
 // Импортировать ошибку

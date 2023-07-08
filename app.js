@@ -1,9 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const helmet = require('helmet');
-// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 const cookieParser = require('cookie-parser');
 const auth = require('./middlewares/auth');
 
@@ -25,11 +23,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 // применить для всех роутов bodyParser (чтение тела запроса)
 app.use(bodyParser.json());
 
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
 
-app.post('/signin', auth, login);
-app.post('/signup', auth, createUser);
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.use('*', (req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Ресурс не найден. Проверьте правильность введенного URL.' });
