@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// Подключим модуль для хэширования пароля
 // eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require('bcryptjs');
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -53,13 +54,14 @@ userSchema.statics.findUserByCredentials = function (email, password) {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
-
-      return bcrypt.compare(password, user.password)
+      return bcrypt.compare(
+        password,
+        user.password,
+      )
         .then((matched) => {
           if (!matched) {
             return Promise.reject(new Error('Неправильные почта или пароль'));
           }
-
           return user;
         });
     });

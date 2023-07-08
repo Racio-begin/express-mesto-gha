@@ -1,9 +1,10 @@
-// Импортировать модель пользователя
+// Подключим модуль для хэширования пароля
 // eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require('bcryptjs');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const jwt = require('jsonwebtoken');
+// Импортировать модель пользователя
 const User = require('../models/user');
+const SECRET_KEY = require('../utils/sk');
 
 // Импортировать ошибку
 const {
@@ -14,6 +15,8 @@ const {
   NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
 } = require('../utils/serverResponseStatus');
+
+const SALT_ROUNDS = 10;
 
 const createUser = (req, res) => {
   // Получим из объекта запроса имя, описание и аватар пользователя
@@ -27,7 +30,10 @@ const createUser = (req, res) => {
 
   // Вызвать метод create, передаем данные на вход для создания пользователя,
   // создадим документ на основе пришедших данных
-  bcrypt.hash(password, 10)
+  bcrypt.hash(
+    password,
+    SALT_ROUNDS,
+  )
     .then((hash) => User.create({
       name,
       about,
@@ -74,6 +80,27 @@ const getUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
+        res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при запросе пользователя.' });
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
+      }
+    });
+};
+
+const getUserInfo = (req, res) => {
+  const userId = req.user._id;
+  User.findById(userId)
+    // .then((user) => {
+    // if (!user) {
+    //   res.status(NOT_FOUND_ERROR).send({ message: 'Такого пользователя не существует.' });
+    // }
+    // res.status(OK_STATUS).send({ data: user });
+    .then((user) => {
+      res.send({ data: user });
+    })
+    .catch((err) => {
+      // if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные при запросе пользователя.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
@@ -130,7 +157,7 @@ const login = (req, res) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        'four-seven-two-thousand-twenty-three',
+        SECRET_KEY,
         { expiresIn: '7d' },
       );
       res.send({ token });
@@ -152,6 +179,7 @@ module.exports = {
   createUser,
   getAllUsers,
   getUser,
+  getUserInfo,
   updateUser,
   updateAvatar,
   login,

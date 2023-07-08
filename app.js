@@ -5,9 +5,11 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 // eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 const cookieParser = require('cookie-parser');
+const auth = require('./middlewares/auth');
 
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const { createUser, login } = require('./controllers/users');
 const { NOT_FOUND_ERROR } = require('./utils/serverResponseStatus');
 const { PORT } = require('./utils/env');
 
@@ -20,22 +22,17 @@ app.use(cookieParser());
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '649db82fee1145c0c41b7f26', // временная мера, вставим сюда _id пользователя из бд (Пётр)
-  };
-
-  next();
-});
-
 // применить для всех роутов bodyParser (чтение тела запроса)
 app.use(bodyParser.json());
 
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
+app.post('/signin', auth, login);
+app.post('/signup', auth, createUser);
+
 app.use('*', (req, res) => {
-  res.status(NOT_FOUND_ERROR).send({ message: 'Ресурс не найден' });
+  res.status(NOT_FOUND_ERROR).send({ message: 'Ресурс не найден. Проверьте правильность введенного URL.' });
 });
 
 app.listen(PORT, () => {
