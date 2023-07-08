@@ -27,11 +27,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 // применить для всех роутов bodyParser (чтение тела запроса)
 app.use(bodyParser.json());
 
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
-
 app.post('/signin', login);
 app.post('/signup', createUser);
+
+app.use(auth);
+
+app.use('/users', usersRouter);
+app.use('/cards', cardsRouter);
 
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Ресурс не найден. Проверьте правильность введенного URL.'));
