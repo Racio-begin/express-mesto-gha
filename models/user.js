@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
     select: false,
     minlength: 8,
   },
+}, {
+  // добавим, чтобы не приходил пароль пользователя
+  toJSON: { useProjection: true },
+  toObject: { useProjection: true },
 }, { versionKey: false });
 
 // Кастомный метод проверки email и пароля
