@@ -6,29 +6,27 @@ const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const isEmail = require('validator/lib/isEmail');
 
-const defaultValues = require('../utils/defaultValues');
-
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: false,
-    default: defaultValues.name,
+    default: 'Жак-Ив Кусто',
     minlength: [2, 'Минимальная длина поля "name" - 2'],
     maxlength: [30, 'Максимальная длина поля "name" - 30'],
   },
   about: {
     type: String,
     required: false,
-    default: defaultValues.about,
+    default: 'Исследователь',
     minlength: [2, 'Минимальная длина поля "about" - 2'],
     maxlength: [30, 'Максимальная длина поля "about" - 30'],
   },
   avatar: {
     type: String,
     required: false,
-    default: defaultValues.avatar,
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator: (v) => validator.isURL(v),
       message: 'Некорректный URL',
