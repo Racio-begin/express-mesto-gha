@@ -46,7 +46,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
-    minlength: 8,
   },
 }, {
   // добавим, чтобы при запросе не приходил пароль пользователя
