@@ -18,7 +18,7 @@ const { OK_STATUS, CREATED_STATUS, MONGO_DUPLICATE_KEY_ERROR } = require('../uti
 
 const SALT_ROUNDS = 10;
 
-// регистрация пользователя
+// РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ //
 const createUser = (req, res, next) => {
   // Получим из объекта запроса имя, описание и аватар пользователя
   const {
@@ -58,18 +58,6 @@ const createUser = (req, res, next) => {
     });
 };
 
-// const getAllUsers = (req, res) => {
-//   // Вызвать метод find, возвращает все сущности, т.к. передаем ему пустой массив
-//   User.find({})
-//     // в случае успеха (resolve) приходит список всех пользователей в бд
-//     .then((users) => {
-//       res.send(users);
-//     })
-//     .catch(() => {
-//       res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка по умолчанию.' });
-//     });
-// };
-
 const getAllUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
@@ -98,12 +86,6 @@ const getUser = (req, res, next) => {
 const getUserInfo = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
-  // .then((user) => {
-  // if (!user) {
-  //   res.status(NOT_FOUND_ERROR).send({ message: 'Такого пользователя не существует.' });
-  // }
-  // res.status(OK_STATUS).send({ data: user });
-
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
@@ -114,7 +96,6 @@ const getUserInfo = (req, res, next) => {
     .catch(next);
 };
 
-// todo: настроить Postman для проверки
 const updateUser = (req, res, next) => {
   // Вызвать метод findByIdAndUpdate, ищет пользователя по id и обновляет указанные поля
   const { name, about } = req.body;
@@ -158,7 +139,7 @@ const updateAvatar = (req, res, next) => {
     });
 };
 
-// авторизация пользователя
+// АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ //
 const login = (req, res, next) => {
   const { email, password } = req.body;
 

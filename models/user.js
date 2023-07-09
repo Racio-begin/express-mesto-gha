@@ -1,29 +1,34 @@
 const mongoose = require('mongoose');
+
 // Подключим модуль для хэширования пароля
 const bcrypt = require('bcryptjs');
+
 const validator = require('validator');
 const isEmail = require('validator/lib/isEmail');
+
+const defaultValues = require('../utils/defaultValues');
+
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: false,
-    default: 'Жак-Ив Кусто',
+    default: defaultValues.name,
     minlength: [2, 'Минимальная длина поля "name" - 2'],
     maxlength: [30, 'Максимальная длина поля "name" - 30'],
   },
   about: {
     type: String,
     required: false,
-    default: 'Исследователь',
+    default: defaultValues.about,
     minlength: [2, 'Минимальная длина поля "about" - 2'],
     maxlength: [30, 'Максимальная длина поля "about" - 30'],
   },
   avatar: {
     type: String,
     required: false,
-    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    default: defaultValues.avatar,
     validate: {
       validator: (v) => validator.isURL(v),
       message: 'Некорректный URL',
@@ -46,7 +51,7 @@ const userSchema = new mongoose.Schema({
     minlength: 8,
   },
 }, {
-  // добавим, чтобы не приходил пароль пользователя
+  // добавим, чтобы при запросе не приходил пароль пользователя
   toJSON: { useProjection: true },
   toObject: { useProjection: true },
 }, { versionKey: false });
