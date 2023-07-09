@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -24,8 +23,8 @@ app.use(cookieParser());
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
-// применить для всех роутов bodyParser (чтение тела запроса)
-app.use(bodyParser.json());
+// применить для всех роутов встроенный в express пасчер (чтение тела запроса)
+app.use(express.json());
 
 app.post('/signin', loginJoiValidation, login);
 app.post('/signup', createUserJoiValidation, createUser);
