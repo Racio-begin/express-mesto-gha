@@ -8,15 +8,15 @@ const {
 
 const {
   getAllUsers,
-  getUser,
   getUserInfo,
+  getUser,
   updateUser,
   updateAvatar,
 } = require('../controllers/users');
 
 usersRouter.get('/', getAllUsers);
-usersRouter.get('/:userId', getUser);
-usersRouter.get('/me', getUserJoiValidation, getUserInfo);
+usersRouter.get('/me', getUserInfo);
+usersRouter.get('/:userId', getUserJoiValidation, getUser);
 usersRouter.patch('/me', updateUserAvatarJoiValidation, updateUser);
 usersRouter.patch('/me/avatar', updateUserInfoJoiValidation, updateAvatar);
 

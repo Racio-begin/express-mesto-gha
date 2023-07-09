@@ -13,12 +13,12 @@ const SECRET_KEY = require('../utils/sk');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
-// const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const { OK_STATUS, CREATED_STATUS, MONGO_DUPLICATE_KEY_ERROR } = require('../utils/ServerResponseStatuses');
 
 const SALT_ROUNDS = 10;
 
+// регистрация пользователя
 const createUser = (req, res, next) => {
   // Получим из объекта запроса имя, описание и аватар пользователя
   const {
@@ -158,6 +158,7 @@ const updateAvatar = (req, res, next) => {
     });
 };
 
+// авторизация пользователя
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
