@@ -3,14 +3,13 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
-// const { NOT_FOUND_ERROR } = require('./utils/serverR');
 const { PORT } = require('./utils/env');
 const NotFoundError = require('./errors/NotFoundError');
 const { INTERNAL_SERVER_ERROR } = require('./utils/ServerResponseStatuses');
@@ -30,8 +29,6 @@ app.use(bodyParser.json());
 
 app.post('/signin', loginJoiValidation, login);
 app.post('/signup', createUserJoiValidation, createUser);
-
-// app.use(auth);
 
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
