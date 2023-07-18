@@ -1,7 +1,7 @@
 [![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
 # Проект Mesto фронтенд + бэкенд
 
-В данном проекте сделаны первые шаги по реализации backend-составляющей проекта Mesto Russia.
+В данном проекте реализована backend-составляющая проекта Mesto Russia.
 
 Страница расположена по адресу: [Express Mesto GHA](https://github.com/Racio-begin/express-mesto-gha/)
 
@@ -29,4 +29,5 @@
 * Улучшение обработки ошибок при передаче невалидных данных или ошибок сервера.
 * Написание логики авторизации и регистрации пользователя в backend.
 * Собственные автотесты.
-* Оптимизация кода и масштабирование проекта.
+* Оптимизация кода.
+* Объединение frontend и backend-составляющих проекта, выгрузка проекта на сервер.
